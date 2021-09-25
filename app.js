@@ -1,7 +1,9 @@
+// Variaveis de elementos
 const currencyOneEl = document.querySelector('[data-js="currency-one"]');
 const currencyTwoEl = document.querySelector('[data-js="currency-two"]');
 const currenciesEl = document.querySelector('[data-js="currencies-container"]');
 
+// Url api
 const url = `https://v6.exchangerate-api.com/v6/627f79b9feadd1ee5cf4531d/latest/USD`;
 
 // Try e catch é uma cláusula que vai tentar executar um código try {},
@@ -9,6 +11,8 @@ const url = `https://v6.exchangerate-api.com/v6/627f79b9feadd1ee5cf4531d/latest/
 // Fetch retorna uma promise.
 // Só pode lançar um erro quando tiver dentro de um try catch, porque se um erro for lançado sem um catch , esse erro vai travar o código da aplicação.
 // Quando um erro é lançado no try, o objeto de erro é recebido no err do catch e pode ser tratado no catch e o erro que foi lançado no try não vai travar o restante do código
+
+// Function when get error and fetch data
 const getErrorMessage = (errorType) =>
   ({
     "unsupported-code": "A moeda não existe em nosso banco de dados",
@@ -63,6 +67,7 @@ const fetchExchangeRate = async () => {
   }
 };
 
+// Function initialization
 const init = async () => {
   const exchangeRateData = await fetchExchangeRate();
 
