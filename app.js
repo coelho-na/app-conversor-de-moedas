@@ -2,7 +2,7 @@ const currencyOneEl = document.querySelector('[data-js="currency-one"]');
 const currencyTwoEl = document.querySelector('[data-js="currency-two"]');
 const currenciesEl = document.querySelector('[data-js="currencies-container"]');
 
-const url = `https://v6.exchangerate-api.com/v6/627f79b9feadd1ee5cf4531d/latest/kSD`;
+const url = `https://v6.exchangerate-api.com/v6/627f79b9feadd1ee5cf4531d/latest/USD`;
 
 // Try e catch é uma cláusula que vai tentar executar um código try {},
 // se o código que ela tentar executar lançar algum erro, executará o outro código catch(err){} e o erro que foi foi lançado não vai travar o restante do código da aplicação.
@@ -35,6 +35,7 @@ const fetchExchangeRate = async () => {
     if (exchangeRateData.result === "error") {
       throw new Error(getErrorMessage(exchangeRateData["error-type"]));
     }
+    return exchangeRateData;
   } catch (err) {
     const div = document.createElement("div");
     const button = document.createElement("button");
@@ -59,22 +60,26 @@ const fetchExchangeRate = async () => {
 
     div.appendChild(button);
     currenciesEl.insertAdjacentElement("afterend", div);
-
-    /*
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-  Mensagem do erro
-  <button type="button" class="btn-close"  aria-label="Close"></button>
-</div>
-    
-    */
   }
 };
 
-fetchExchangeRate();
+const init = async () => {
+  const exchangeRateData = await fetchExchangeRate();
 
-const option = `<option>oi</option>`;
+  const getOptions = (selectedCurrency) =>
+    Object.keys(exchangeRateData.conversion_rates)
+      .map(
+        (currency) =>
+          `<option ${
+            currency === selectedCurrency ? "selected" : ""
+          }>${currency}</option>`
+      )
+      .join("");
 
-currencyOneEl.innerHTML = option;
-currencyTwoEl.innerHTML = option;
+  console.log(getOptions);
 
-console.log(currencyOneEl, currencyTwoEl);
+  currencyOneEl.innerHTML = getOptions("USD");
+  currencyTwoEl.innerHTML = getOptions("BRL");
+};
+
+init();
