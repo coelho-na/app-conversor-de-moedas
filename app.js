@@ -2,6 +2,15 @@
 const currencyOneEl = document.querySelector('[data-js="currency-one"]');
 const currencyTwoEl = document.querySelector('[data-js="currency-two"]');
 const currenciesEl = document.querySelector('[data-js="currencies-container"]');
+const convertedValueEl = document.querySelector('[data-js="converted-value"]');
+const valuePrecisionEl = document.querySelector(
+  '[data-js="conversion-precision"]'
+);
+const timesCurrencyOneEl = document.querySelector(
+  '[data-js="currency-one-times"]'
+);
+
+let internalExchangeRate = {};
 
 // Url api
 const url = `https://v6.exchangerate-api.com/v6/627f79b9feadd1ee5cf4531d/latest/USD`;
@@ -71,6 +80,8 @@ const fetchExchangeRate = async () => {
 const init = async () => {
   const exchangeRateData = await fetchExchangeRate();
 
+  internalExchangeRate = { ...exchangeRateData };
+
   const getOptions = (selectedCurrency) =>
     Object.keys(exchangeRateData.conversion_rates)
       .map(
@@ -85,6 +96,28 @@ const init = async () => {
 
   currencyOneEl.innerHTML = getOptions("USD");
   currencyTwoEl.innerHTML = getOptions("BRL");
+
+  convertedValueEl.textContent =
+    exchangeRateData.conversion_rates.BRL.toFixed(2);
+
+  valuePrecisionEl.textContent = `1 USD = ${exchangeRateData.conversion_rates.BRL} BRL`;
 };
+
+timesCurrencyOneEl.addEventListener("input", (e) => {
+  convertedValueEl.textContent = (
+    e.target.value * internalExchangeRate.conversion_rates[currencyTwoEl.value]
+  ).toFixed(2);
+});
+
+currencyTwoEl.addEventListener("input", (e) => {
+  const currencyTwoValue =
+    internalExchangeRate.conversion_rates[e.target.value];
+  convertedValueEl.textContent = (
+    timesCurrencyOneEl.value * currencyTwoValue
+  ).toFixed(2);
+  valuePrecisionEl.textContent = `1 USD = ${
+    1 * internalExchangeRate.conversion_rates[currencyTwoEl.value]
+  } ${currencyTwoEl.value}`;
+});
 
 init();
