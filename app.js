@@ -114,17 +114,17 @@ currencyTwoEl.addEventListener("input", (e) => {
   convertedValueEl.textContent = (
     timesCurrencyOneEl.value * currencyTwoValue
   ).toFixed(2);
-  valuePrecisionEl.textContent = `1 USD = ${
+  valuePrecisionEl.textContent = `1 ${currencyOneEl.value} = ${
     1 * internalExchangeRate.conversion_rates[currencyTwoEl.value]
   } ${currencyTwoEl.value}`;
 });
 
 currencyOneEl.addEventListener('input', async (e) => {
-
-
  internalExchangeRate = { ...(await fetchExchangeRate(getUrl(e.target.value)))}
 
  convertedValueEl.textContent = (timesCurrencyOneEl.value * internalExchangeRate.conversion_rates[currencyTwoEl.value]).toFixed(2)
+
+ valuePrecisionEl.textContent =  ` 1 ${currencyOneEl.value} = ${1 * internalExchangeRate.conversion_rates[currencyTwoEl.value]} ${currencyTwoEl.value}`
 })
 
 init();
